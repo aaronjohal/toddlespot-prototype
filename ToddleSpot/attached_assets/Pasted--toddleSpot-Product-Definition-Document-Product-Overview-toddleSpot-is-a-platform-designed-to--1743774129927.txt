@@ -1,0 +1,544 @@
+# toddleSpot Product Definition Document
+
+## Product Overview
+
+toddleSpot is a platform designed to help parents on maternity and paternity leave discover baby-friendly venues and activities. The platform focuses on providing detailed information about venues' baby-friendliness across various criteria, allowing parents to make informed decisions about where to visit with their babies. Additionally, toddleSpot features a dedicated tab showcasing personalized offers for child-friendly experiences, classes, and deals.
+
+### Mission Statement
+To help parents on leave easily find welcoming spaces for them and their babies, while providing detailed, trustworthy information about venue baby-friendliness.
+
+### Target Audience
+- Primary: Parents on maternity/paternity leave with babies under 12 months
+- Secondary: Parents with toddlers, caregivers (grandparents, nannies)
+
+### Core Value Proposition
+toddleSpot solves the uncertainty and stress of finding baby-friendly venues by providing:
+1. Detailed, multi-criteria venue ratings specific to baby-friendliness
+2. Parent-generated reviews and tips
+3. Curated offers for baby-friendly experiences and activities
+4. Simple, location-based search to find suitable venues nearby
+
+## Product Requirements
+
+### Platform Requirements
+- Mobile-responsive web application accessible on desktop and mobile devices
+- Optimized for all major browsers (Chrome, Safari, Firefox, Edge)
+- Progressive Web App (PWA) capabilities for improved mobile experience
+- Geolocation support for location-based searches
+
+### User Roles
+1. **Parents/Caregivers (Primary Users)**
+   - Can search for and view venues
+   - Can read and write reviews
+   - Can browse personalized offers
+   - Can create and manage user accounts
+
+2. **Business Owners/Managers**
+   - Can claim venue listings
+   - Can respond to reviews
+   - Can update venue information and baby-friendly features
+   - Can create and manage business accounts
+
+3. **Admin**
+   - Can manage all content
+   - Can verify venues and business accounts
+   - Can moderate reviews
+   - Can manage offers and promotions
+   - Can access analytics dashboard
+
+### MVP Feature Specifications
+
+#### 1. User Registration and Profiles
+- Email-based registration
+- Social login options (Google, Apple, Facebook)
+- User profile creation with optional info:
+  - Parent type (mother, father, caregiver)
+  - Child age(s)
+  - Location (borough/area)
+  - Preferences for venue types
+- Ability to save favorite venues
+- Settings management
+
+#### 2. Venue Discovery and Search
+- Map-based venue search with current location detection
+- List view of venues with sorting options:
+  - Distance
+  - Overall baby-friendliness rating
+  - Specific criteria ratings (e.g., highest-rated for changing facilities)
+- Search filters:
+  - Venue type (café, restaurant, play area, park, etc.)
+  - Baby-friendly features (changing facilities, high chairs, pram access, etc.)
+  - Distance range
+  - Operating hours (currently open)
+- Venue cards in search results showing:
+  - Venue name and type
+  - Distance from current location
+  - Overall baby-friendliness rating (visual indicator)
+  - Top 2-3 baby-friendly features
+  - Number of reviews
+  - Representative photo
+
+#### 3. Venue Detail Pages
+- Comprehensive venue information:
+  - Name, address, contact details
+  - Operating hours
+  - Photos (uploaded by venue and users)
+  - Description
+  - Website and social links
+- Baby-friendliness ratings across multiple criteria:
+  - Changing facilities (quality, accessibility)
+  - High chairs/child seating
+  - Pram/stroller access and storage
+  - Staff friendliness toward babies
+  - Noise level/quiet spaces
+  - Feeding-friendly (breastfeeding areas, bottle warming)
+  - Overall baby-friendliness score
+- Visual indicators for key baby-friendly features (icons)
+- Location map with directions option
+- Review section (see Review System below)
+- "Save as Favorite" functionality
+- Share functionality (social, messaging, email)
+
+#### 4. Review System
+- Star-based ratings for specific criteria:
+  - Overall experience
+  - Changing facilities
+  - High chair quality/availability
+  - Pram accessibility
+  - Staff attitude toward babies
+  - Noise level appropriateness
+- Text review with minimum character count
+- Photo upload option with reviews
+- Display of reviewer name, child age at time of visit, and visit date
+- Sorting options for reviews (most recent, highest rated, etc.)
+- Helpful vote functionality for reviews
+- Flag inappropriate content option
+- For business owners: ability to respond to reviews
+
+#### 5. Offers Tab
+- Dedicated section for child-friendly offers and experiences
+- Categories of offers:
+  - Classes and activities (baby sensory, swimming, etc.)
+  - Special events
+  - Products and services
+  - Meal deals
+  - Outings and trips
+- Each offer listing includes:
+  - Title and description
+  - Provider information
+  - Valid dates
+  - Terms and conditions
+  - Visual indicator of offer type
+  - Link to provider website or booking
+- Filter options:
+  - Offer type
+  - Child age appropriateness
+  - Location/distance
+  - Date/availability
+- Personalization based on user's child age and preferences
+
+#### 6. Business Interface
+- Business registration and verification process
+- Venue management dashboard
+- Ability to edit venue details and baby-friendly features
+- Photo management
+- Review response functionality
+- Basic analytics (profile views, review metrics)
+
+### Technical Requirements
+
+#### 1. Front-End
+- React.js for component-based UI development
+- Responsive design using CSS frameworks (e.g., Tailwind CSS)
+- Progressive Web App capabilities
+- Client-side validation for forms
+- Optimized loading for mobile users
+- Offline capabilities for previously viewed venues
+
+#### 2. Back-End
+- Node.js with Express framework
+- RESTful API architecture
+- MongoDB for flexible document storage
+- User authentication and authorization (JWT)
+- Geospatial indexing for location-based queries
+- Caching system for frequently accessed data
+- Rate limiting for API protection
+
+#### 3. Data Storage
+- User profiles schema
+- Venues schema with geospatial coordinates
+- Reviews schema linked to users and venues
+- Offers schema with categorization
+- Media storage for images (AWS S3 or similar)
+- Business accounts schema
+
+#### 4. External Integrations
+- Google Maps API for location services and mapping
+- Auth providers (Google, Facebook, Apple)
+- Email service provider for notifications
+- Analytics platform (Google Analytics, Mixpanel)
+- Image optimization and storage service
+
+#### 5. Security Requirements
+- HTTPS implementation
+- Secure user authentication
+- Data encryption for sensitive information
+- GDPR compliance for user data
+- Content moderation for reviews and photos
+- Regular security audits and updates
+
+## User Flows
+
+### 1. New User Registration
+1. User visits toddleSpot website
+2. Clicks "Sign Up" on the navigation bar
+3. Enters email and password or chooses social login
+4. Completes optional profile information (child age, location)
+5. Views welcome screen with brief tutorial
+6. Is directed to home screen with nearby venues
+
+### 2. Venue Search and Discovery
+1. User accesses search screen
+2. Allows location access or manually enters location
+3. Views map/list of nearby baby-friendly venues
+4. Applies filters for specific requirements (high chairs, changing facilities)
+5. Browses results in map or list view
+6. Selects venue to view detailed information
+
+### 3. Writing a Review
+1. User navigates to venue detail page
+2. Scrolls to review section
+3. Clicks "Write a Review" button
+4. Provides ratings across multiple criteria
+5. Writes detailed review text
+6. Optionally uploads photos
+7. Submits review
+8. Reviews appear on venue page after moderation
+
+### 4. Browsing Offers
+1. User navigates to "Offers" tab
+2. Views personalized offers based on profile
+3. Applies filters for specific types of offers
+4. Browses offer listings
+5. Clicks on offer to view details
+6. Follows external link or saves offer for later
+
+### 5. Business Owner Claiming Venue
+1. Business owner searches for their venue
+2. Selects venue and clicks "Claim this Business"
+3. Creates business account or logs in
+4. Completes verification process
+5. Gains access to business dashboard
+6. Updates venue information and features
+7. Responds to customer reviews
+
+## Design Guidelines
+
+### 1. Visual Identity
+- **Color Palette**:
+  - Primary: Warm, friendly colors (suggested: soft teal #5CBDB9)
+  - Secondary: Complementary accents (suggested: coral #FF8A5C)
+  - Neutral: Clean grays for text and backgrounds
+- **Typography**:
+  - Primary font: Sans-serif, accessible (suggested: Inter)
+  - Headers: Medium to bold weight
+  - Body text: Regular weight, high readability on mobile
+- **Iconography**:
+  - Simple, universally understood icons for baby features
+  - Consistent style throughout the platform
+  - Clear visual indicators for ratings and features
+
+### 2. User Interface Principles
+- **Accessibility**:
+  - WCAG 2.1 AA compliance
+  - Sufficient color contrast
+  - Screen reader compatibility
+  - Keyboard navigation support
+- **Usability**:
+  - One-handed mobile operation where possible (for parents holding babies)
+  - Clear, descriptive button labels
+  - Consistent navigation patterns
+  - Quick access to frequently used features
+- **Responsive Design**:
+  - Optimized layouts for mobile, tablet, and desktop
+  - Touch-friendly elements on mobile
+  - Efficient use of screen real estate
+
+## Data Architecture
+
+### 1. Core Data Entities
+
+#### User
+- `_id`: Unique identifier
+- `email`: User email
+- `password`: Encrypted password
+- `displayName`: Public username
+- `profileType`: Parent, caregiver, etc.
+- `childrenAges`: Array of child ages
+- `location`: User's primary location
+- `preferences`: Venue type preferences
+- `favorites`: Array of saved venue IDs
+- `createdAt`: Account creation timestamp
+- `lastLogin`: Last login timestamp
+
+#### Venue
+- `_id`: Unique identifier
+- `name`: Business name
+- `type`: Venue category
+- `address`: Full address information
+- `location`: Geo coordinates
+- `contact`: Phone, email, website
+- `hours`: Operating hours by day
+- `description`: Venue description
+- `photos`: Array of photo URLs
+- `babyFeatures`: Object containing feature availability:
+  - `changingFacilities`: Boolean
+  - `highChairs`: Boolean
+  - `pramAccess`: Boolean
+  - `quietSpace`: Boolean
+  - `breastfeedingArea`: Boolean
+  - `bottleWarming`: Boolean
+- `ratings`: Object with average ratings:
+  - `overall`: Number (1-5)
+  - `changingFacilities`: Number (1-5)
+  - `highChairs`: Number (1-5)
+  - `pramAccess`: Number (1-5)
+  - `staffFriendliness`: Number (1-5)
+  - `noiseLevel`: Number (1-5)
+- `reviewCount`: Number of reviews
+- `claimedBy`: Business account ID (if claimed)
+- `verified`: Boolean
+
+#### Review
+- `_id`: Unique identifier
+- `venueId`: Reference to venue
+- `userId`: Reference to user
+- `visitDate`: Date of visit
+- `childAge`: Age of child at time of visit
+- `ratings`: Object containing ratings:
+  - `overall`: Number (1-5)
+  - `changingFacilities`: Number (1-5)
+  - `highChairs`: Number (1-5)
+  - `pramAccess`: Number (1-5)
+  - `staffFriendliness`: Number (1-5)
+  - `noiseLevel`: Number (1-5)
+- `content`: Review text
+- `photos`: Array of photo URLs
+- `helpfulVotes`: Number
+- `replyId`: Reference to business reply
+- `createdAt`: Review timestamp
+- `updatedAt`: Last edit timestamp
+
+#### Offer
+- `_id`: Unique identifier
+- `title`: Offer title
+- `description`: Detailed description
+- `provider`: Business providing the offer
+- `type`: Category (class, product, meal deal, etc.)
+- `targetAges`: Array of suitable age ranges
+- `location`: Related location information
+- `validFrom`: Start date
+- `validTo`: End date
+- `terms`: Terms and conditions
+- `link`: External URL
+- `imageUrl`: Feature image
+- `featured`: Boolean
+
+#### BusinessAccount
+- `_id`: Unique identifier
+- `businessName`: Company name
+- `contactPerson`: Primary contact name
+- `email`: Business email
+- `phone`: Contact number
+- `password`: Encrypted password
+- `venues`: Array of venue IDs managed by business
+- `verified`: Verification status
+- `createdAt`: Account creation timestamp
+- `lastLogin`: Last login timestamp
+
+### 2. API Endpoints
+
+#### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/forgot-password` - Password reset request
+- `POST /api/auth/reset-password` - Password reset
+
+#### User Management
+- `GET /api/users/me` - Get current user profile
+- `PUT /api/users/me` - Update user profile
+- `GET /api/users/me/favorites` - Get user's favorite venues
+- `POST /api/users/me/favorites` - Add venue to favorites
+- `DELETE /api/users/me/favorites/:venueId` - Remove venue from favorites
+
+#### Venues
+- `GET /api/venues` - Get venues with filters
+- `GET /api/venues/nearby` - Get venues near coordinates
+- `GET /api/venues/:id` - Get single venue details
+- `POST /api/venues` - Create new venue (admin)
+- `PUT /api/venues/:id` - Update venue (admin/owner)
+- `DELETE /api/venues/:id` - Delete venue (admin)
+
+#### Reviews
+- `GET /api/venues/:id/reviews` - Get reviews for venue
+- `POST /api/venues/:id/reviews` - Create review for venue
+- `PUT /api/reviews/:id` - Update own review
+- `DELETE /api/reviews/:id` - Delete own review
+- `POST /api/reviews/:id/helpful` - Mark review as helpful
+- `POST /api/reviews/:id/reply` - Business reply to review
+
+#### Offers
+- `GET /api/offers` - Get all offers with filters
+- `GET /api/offers/:id` - Get single offer details
+- `POST /api/offers` - Create new offer (admin)
+- `PUT /api/offers/:id` - Update offer (admin)
+- `DELETE /api/offers/:id` - Delete offer (admin)
+
+#### Business Management
+- `POST /api/business/register` - Register business account
+- `POST /api/business/claim/:venueId` - Claim venue
+- `GET /api/business/venues` - Get business's venues
+- `PUT /api/business/venues/:id` - Update own venue
+
+## Implementation Plan
+
+### Phase 1: MVP Development (10-12 weeks)
+1. **Weeks 1-2: Setup & Architecture**
+   - Project initialization and repository setup
+   - Database schema definition
+   - API structure design
+   - Environment configuration
+
+2. **Weeks 3-4: Core Authentication & User Management**
+   - User registration and authentication
+   - Profile creation and management
+   - Session handling and security implementation
+
+3. **Weeks 5-6: Venue Discovery Features**
+   - Venue data model implementation
+   - Search and filter functionality
+   - Geolocation services integration
+   - Venue detail page development
+
+4. **Weeks 7-8: Review System**
+   - Review creation and management
+   - Rating calculation and display
+   - Photo upload functionality
+   - Moderation tools
+
+5. **Weeks 9-10: Offers Tab & Business Features**
+   - Offers data model and display
+   - Basic business account features
+   - Venue claiming process
+   - Review response functionality
+
+6. **Weeks 11-12: Integration & Testing**
+   - Component integration
+   - User acceptance testing
+   - Performance optimization
+   - Bug fixes and refinements
+
+### Phase 2: Post-MVP Enhancements (Future Roadmap)
+1. **Community Features**
+   - User-to-user messaging
+   - Meetup coordination
+   - Forum or discussion boards
+
+2. **Enhanced Business Tools**
+   - Advanced analytics dashboard
+   - Promotional tools
+   - Content management features
+
+3. **Advanced Personalization**
+   - Machine learning for personalized recommendations
+   - User behavior-based suggestions
+   - Custom notification preferences
+
+4. **Mobile Apps**
+   - Native iOS application
+   - Native Android application
+   - Cross-platform feature parity
+
+## Measurement & Success Criteria
+
+### Key Performance Indicators (KPIs)
+1. **User Engagement**
+   - Monthly and daily active users
+   - Average session duration
+   - Number of venue views per session
+   - Review submission rate
+
+2. **Growth Metrics**
+   - New user registration rate
+   - User retention rate after 1, 7, 30 days
+   - Venue database growth
+   - Review volume growth
+
+3. **Platform Health**
+   - Average venue rating quality (completeness)
+   - Review quality and length
+   - Business verification rate
+   - Content freshness (new reviews, updated venues)
+
+4. **Business Metrics**
+   - Number of claimed venues
+   - Business response rate to reviews
+   - Offer engagement statistics
+
+### Success Definitions for MVP
+- At least 500 active users within 3 months of launch
+- Minimum 200 venues with complete information
+- Average of 3+ reviews per venue
+- 50+ businesses claiming their venues
+- 70% of users return at least once within the first month
+
+## Technical Implementation Notes
+
+### Development Environment
+- **Version Control**: Git with GitHub
+- **CI/CD**: Automated testing and deployment pipeline
+- **Environment Management**: Development, Staging, Production
+- **Documentation**: API documentation with Swagger/OpenAPI
+
+### Infrastructure Recommendations
+- **Hosting**: AWS or similar cloud provider
+- **Database**: MongoDB Atlas for flexible document storage
+- **File Storage**: AWS S3 for images and media
+- **CDN**: Cloudfront for static asset delivery
+- **Monitoring**: New Relic or similar for performance tracking
+
+### Third-Party Services
+- **Maps**: Google Maps API with Places integration
+- **Authentication**: Auth0 or Firebase Authentication
+- **Email**: SendGrid or Mailgun
+- **Image Processing**: Cloudinary for optimization
+- **Analytics**: Google Analytics and Mixpanel
+
+### Security Considerations
+- Regular dependency updates and security patches
+- Input validation and sanitization
+- Rate limiting and DDOS protection
+- Regular backups and disaster recovery plan
+- PII data encryption and protection
+- GDPR and data privacy compliance
+
+## Appendix
+
+### Glossary of Terms
+- **Baby-friendly**: Venues that accommodate the needs of parents with babies through facilities, policies, and staff attitudes
+- **Changing facilities**: Dedicated areas for diaper changing
+- **Pram access**: Ability to easily enter and navigate with a stroller
+- **High chair**: Specialized seating for babies and toddlers
+- **Off-peak hours**: Less busy times when businesses might offer special promotions
+
+### References
+- Market research data from "Baby-Friendly Platform Market Research Report"
+- Parent interview plan
+- Competitor analysis findings
+
+### Future Considerations
+- Internationalization and localization for expansion to other cities
+- Integration with baby product marketplaces
+- Partnership opportunities with parenting organizations
+- Premium features for potential subscription model
