@@ -3,10 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FeatureBadge } from "@/components/ui/feature-badge";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Venue } from "@shared/schema";
-import { useAuth } from "@/hooks/use-auth";
 
 // Icons for baby-friendly features
 import {
@@ -33,83 +30,50 @@ export function VenueCard({
   className,
   onClick,
 }: VenueCardProps) {
-  const { user } = useAuth();
   const [isInFavorites, setIsInFavorites] = React.useState(isFavorite);
-  
+
   // Get top 3 most significant features
   const getTopFeatures = () => {
     const features = [];
-    
+
     if (venue.changingFacilities) features.push({
       label: "Changing Station",
       icon: <Baby className="h-3.5 w-3.5" />
     });
-    
+
     if (venue.pramAccess) features.push({
       label: "Pram Access",
       icon: <Accessibility className="h-3.5 w-3.5" />
     });
-    
+
     if (venue.quietSpace) features.push({
       label: "Quiet Space",
       icon: <Volume2 className="h-3.5 w-3.5" />
     });
-    
+
     if (venue.highChairs && features.length < 3) features.push({
       label: "High Chairs",
       icon: <User className="h-3.5 w-3.5" />
     });
-    
+
     if (venue.bottleWarming && features.length < 3) features.push({
       label: "Bottle Warming",
       icon: <Coffee className="h-3.5 w-3.5" />
     });
-    
+
     if (venue.breastfeedingArea && features.length < 3) features.push({
       label: "Breastfeeding Area",
       icon: <Milk className="h-3.5 w-3.5" />
     });
-    
+
     return features.slice(0, 3);
   };
-  
+
   const topFeatures = getTopFeatures();
-  
-  const addFavoriteMutation = useMutation({
-    mutationFn: async () => {
-      if (!user) return null;
-      const res = await apiRequest("POST", "/api/favorites", {
-        userId: user.id,
-        venueId: venue.id
-      });
-      return res.json();
-    },
-    onSuccess: () => {
-      setIsInFavorites(true);
-      queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
-    }
-  });
-  
-  const removeFavoriteMutation = useMutation({
-    mutationFn: async () => {
-      if (!user) return null;
-      const res = await apiRequest("DELETE", `/api/favorites/${venue.id}`);
-      return res.json();
-    },
-    onSuccess: () => {
-      setIsInFavorites(false);
-      queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
-    }
-  });
-  
+
   const handleFavoriteToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    if (isInFavorites) {
-      removeFavoriteMutation.mutate();
-    } else {
-      addFavoriteMutation.mutate();
-    }
+    setIsInFavorites(!isInFavorites);
   };
 
   return (

@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { FilterPill } from "@/components/ui/filter-pill";
-import { Skeleton } from "@/components/ui/skeleton";
 import { VenueCard } from "@/components/venue-card";
-import { Venue } from "@shared/schema";
 import { Filter, PlusCircle } from "lucide-react";
+import { mockVenues } from "@/lib/mock-data";
 
 export default function DiscoverPage() {
   const [, navigate] = useLocation();
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  
+
   // Get user location
   useEffect(() => {
     if (navigator.geolocation) {
@@ -28,32 +26,16 @@ export default function DiscoverPage() {
       );
     }
   }, []);
-  
-  // Fetch venues
-  const { data: venues, isLoading: venuesLoading } = useQuery<Venue[]>({
-    queryKey: ["/api/venues", activeFilter],
-    queryFn: async () => {
-      const url = activeFilter
-        ? `/api/venues?type=${encodeURIComponent(activeFilter)}`
-        : "/api/venues";
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch venues");
-      return res.json();
+
+  // Use mock data with filtering
+  const venues = useMemo(() => {
+    if (activeFilter) {
+      return mockVenues.filter(v => v.type === activeFilter);
     }
-  });
-  
-  // Fetch nearby venues if we have location
-  const { data: nearbyVenues, isLoading: nearbyLoading } = useQuery<Venue[]>({
-    queryKey: ["/api/venues/nearby", userLocation],
-    queryFn: async () => {
-      if (!userLocation) return [];
-      const url = `/api/venues/nearby?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}&radius=5`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch nearby venues");
-      return res.json();
-    },
-    enabled: !!userLocation
-  });
+    return mockVenues;
+  }, [activeFilter]);
+
+  const nearbyVenues = mockVenues;
   
   const handleFilterChange = (filter: string) => {
     setActiveFilter(activeFilter === filter ? null : filter);
@@ -122,73 +104,37 @@ export default function DiscoverPage() {
           <h2 className="text-lg font-semibold text-gray-800">Top Baby-Friendly Spots</h2>
           <a href="#" className="text-sm text-teal-500 font-medium">See all</a>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-4">
-          {venuesLoading ? (
-            // Loading skeletons
-            Array.from({ length: 2 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm">
-                <Skeleton className="h-40 w-full" />
-                <div className="p-3">
-                  <Skeleton className="h-5 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-1/2 mb-3" />
-                  <div className="flex gap-1.5">
-                    <Skeleton className="h-6 w-24 rounded-full" />
-                    <Skeleton className="h-6 w-24 rounded-full" />
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            venues?.slice(0, 2).map((venue) => (
-              <VenueCard
-                key={venue.id}
-                venue={venue}
-                distance={calculateDistance(venue)}
-                onClick={() => handleVenueClick(venue.id)}
-              />
-            ))
-          )}
+          {venues.slice(0, 2).map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              distance={calculateDistance(venue)}
+              onClick={() => handleVenueClick(venue.id)}
+            />
+          ))}
         </div>
       </div>
-      
+
       {/* Nearby spots */}
-      {userLocation && (
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-gray-800">Nearby Spots</h2>
-            <a href="#" className="text-sm text-teal-500 font-medium">See all</a>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-4">
-            {nearbyLoading ? (
-              // Loading skeletons
-              Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm">
-                  <Skeleton className="h-40 w-full" />
-                  <div className="p-3">
-                    <Skeleton className="h-5 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-1/2 mb-3" />
-                    <div className="flex gap-1.5">
-                      <Skeleton className="h-6 w-24 rounded-full" />
-                      <Skeleton className="h-6 w-24 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              nearbyVenues?.slice(0, 3).map((venue) => (
-                <VenueCard
-                  key={venue.id}
-                  venue={venue}
-                  distance={calculateDistance(venue)}
-                  onClick={() => handleVenueClick(venue.id)}
-                />
-              ))
-            )}
-          </div>
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-800">Nearby Spots</h2>
+          <a href="#" className="text-sm text-teal-500 font-medium">See all</a>
         </div>
-      )}
+
+        <div className="grid grid-cols-1 gap-4">
+          {nearbyVenues.slice(0, 3).map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              distance={calculateDistance(venue)}
+              onClick={() => handleVenueClick(venue.id)}
+            />
+          ))}
+        </div>
+      </div>
       
       {/* Floating action button */}
       <div className="fixed right-4 bottom-24 z-50">

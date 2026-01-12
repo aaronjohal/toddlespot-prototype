@@ -1,43 +1,28 @@
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useMemo } from "react";
 import { FilterPill } from "@/components/ui/filter-pill";
 import { OfferCard } from "@/components/offer-card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Offer } from "@shared/schema";
+import { mockOffers } from "@/lib/mock-data";
 
 export default function OffersPage() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  
-  // Fetch all offers
-  const { data: offers, isLoading: offersLoading } = useQuery<Offer[]>({
-    queryKey: ["/api/offers", activeFilter],
-    queryFn: async () => {
-      const url = activeFilter
-        ? `/api/offers?type=${encodeURIComponent(activeFilter)}`
-        : "/api/offers";
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch offers");
-      return res.json();
+
+  // Use mock data with filtering
+  const offers = useMemo(() => {
+    if (activeFilter) {
+      return mockOffers.filter(o => o.type === activeFilter);
     }
-  });
-  
-  // Fetch featured offers
-  const { data: featuredOffers, isLoading: featuredLoading } = useQuery<Offer[]>({
-    queryKey: ["/api/offers/featured"],
-    queryFn: async () => {
-      const res = await fetch("/api/offers/featured");
-      if (!res.ok) throw new Error("Failed to fetch featured offers");
-      return res.json();
-    }
-  });
-  
+    return mockOffers;
+  }, [activeFilter]);
+
+  const featuredOffers = mockOffers.filter(o => o.featured);
+
   const handleFilterChange = (filter: string) => {
     setActiveFilter(activeFilter === filter ? null : filter);
   };
-  
+
   // Filter types
-  const offerTypes = ["Classes", "Activities", "Products", "Meals"];
-  
+  const offerTypes = ["class", "activity", "meal"];
+
   return (
     <div className="p-4">
       {/* Filter bar */}
@@ -48,63 +33,39 @@ export default function OffersPage() {
             isActive={activeFilter === null}
             onClick={() => setActiveFilter(null)}
           />
-          
+
           {offerTypes.map((type) => (
             <FilterPill
               key={type}
-              label={type}
-              isActive={activeFilter === type.toLowerCase()}
-              onClick={() => handleFilterChange(type.toLowerCase())}
+              label={type.charAt(0).toUpperCase() + type.slice(1) + (type === "class" ? "es" : "s")}
+              isActive={activeFilter === type}
+              onClick={() => handleFilterChange(type)}
             />
           ))}
         </div>
       </div>
-      
+
       {/* Featured offers */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-gray-800">Featured Offers</h2>
         </div>
-        
-        {featuredLoading ? (
-          <Skeleton className="h-48 w-full rounded-xl mb-5" />
-        ) : (
-          featuredOffers && featuredOffers.length > 0 && (
-            <OfferCard 
-              offer={featuredOffers[0]} 
-              featured={true} 
-              className="mb-5"
-            />
-          )
+
+        {featuredOffers.length > 0 && (
+          <OfferCard
+            offer={featuredOffers[0]}
+            featured={true}
+            className="mb-5"
+          />
         )}
-        
+
         <div className="grid grid-cols-1 gap-4">
-          {offersLoading ? (
-            // Loading skeletons
-            Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm p-4">
-                <div className="flex gap-3">
-                  <Skeleton className="w-20 h-20 rounded-lg" />
-                  <div className="flex-1">
-                    <Skeleton className="h-5 w-24 rounded-full mb-2" />
-                    <Skeleton className="h-5 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-2/3 mb-3" />
-                    <div className="flex justify-between">
-                      <Skeleton className="h-4 w-1/3" />
-                      <Skeleton className="h-4 w-16" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            offers?.filter(offer => !offer.featured).slice(0, 4).map((offer) => (
-              <OfferCard
-                key={offer.id}
-                offer={offer}
-              />
-            ))
-          )}
+          {offers.filter(offer => !offer.featured).map((offer) => (
+            <OfferCard
+              key={offer.id}
+              offer={offer}
+            />
+          ))}
         </div>
       </div>
     </div>

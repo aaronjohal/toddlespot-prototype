@@ -99,9 +99,15 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
     const now = new Date();
-    const user: User = { 
-      ...insertUser, 
-      id, 
+    const user: User = {
+      id,
+      username: insertUser.username,
+      password: insertUser.password,
+      email: insertUser.email,
+      displayName: insertUser.displayName ?? null,
+      profileType: insertUser.profileType ?? null,
+      childAges: insertUser.childAges ?? null,
+      location: insertUser.location ?? null,
       createdAt: now,
       lastLogin: now
     };
@@ -153,8 +159,30 @@ export class MemStorage implements IStorage {
   async createVenue(insertVenue: InsertVenue): Promise<Venue> {
     const id = this.venueIdCounter++;
     const venue: Venue = {
-      ...insertVenue,
       id,
+      name: insertVenue.name,
+      type: insertVenue.type,
+      address: insertVenue.address,
+      latitude: insertVenue.latitude,
+      longitude: insertVenue.longitude,
+      phone: insertVenue.phone ?? null,
+      website: insertVenue.website ?? null,
+      description: insertVenue.description ?? null,
+      photos: insertVenue.photos ?? null,
+      hours: insertVenue.hours ?? null,
+      changingFacilities: insertVenue.changingFacilities ?? null,
+      highChairs: insertVenue.highChairs ?? null,
+      pramAccess: insertVenue.pramAccess ?? null,
+      quietSpace: insertVenue.quietSpace ?? null,
+      breastfeedingArea: insertVenue.breastfeedingArea ?? null,
+      bottleWarming: insertVenue.bottleWarming ?? null,
+      overallRating: insertVenue.overallRating ?? null,
+      changingFacilitiesRating: insertVenue.changingFacilitiesRating ?? null,
+      highChairsRating: insertVenue.highChairsRating ?? null,
+      pramAccessRating: insertVenue.pramAccessRating ?? null,
+      staffFriendlinessRating: insertVenue.staffFriendlinessRating ?? null,
+      noiseLevelRating: insertVenue.noiseLevelRating ?? null,
+      verified: insertVenue.verified ?? null,
       reviewCount: 0,
       createdAt: new Date()
     };
@@ -179,20 +207,31 @@ export class MemStorage implements IStorage {
   async getReviewsByVenue(venueId: number): Promise<Review[]> {
     return Array.from(this.reviews.values())
       .filter(review => review.venueId === venueId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
   }
 
   async getReviewsByUser(userId: number): Promise<Review[]> {
     return Array.from(this.reviews.values())
       .filter(review => review.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
   }
 
   async createReview(insertReview: InsertReview): Promise<Review> {
     const id = this.reviewIdCounter++;
     const review: Review = {
-      ...insertReview,
       id,
+      venueId: insertReview.venueId,
+      userId: insertReview.userId,
+      visitDate: insertReview.visitDate ?? null,
+      childAge: insertReview.childAge ?? null,
+      overallRating: insertReview.overallRating,
+      changingFacilitiesRating: insertReview.changingFacilitiesRating ?? null,
+      highChairsRating: insertReview.highChairsRating ?? null,
+      pramAccessRating: insertReview.pramAccessRating ?? null,
+      staffFriendlinessRating: insertReview.staffFriendlinessRating ?? null,
+      noiseLevelRating: insertReview.noiseLevelRating ?? null,
+      content: insertReview.content,
+      photos: insertReview.photos ?? null,
       helpfulVotes: 0,
       createdAt: new Date()
     };
@@ -231,10 +270,10 @@ export class MemStorage implements IStorage {
   async updateReviewHelpfulVotes(id: number, increment: number): Promise<Review | undefined> {
     const review = this.reviews.get(id);
     if (!review) return undefined;
-    
-    const updatedReview = { 
-      ...review, 
-      helpfulVotes: review.helpfulVotes + increment 
+
+    const updatedReview = {
+      ...review,
+      helpfulVotes: (review.helpfulVotes ?? 0) + increment
     };
     this.reviews.set(id, updatedReview);
     return updatedReview;
@@ -260,14 +299,25 @@ export class MemStorage implements IStorage {
   async getFeaturedOffers(): Promise<Offer[]> {
     return Array.from(this.offers.values())
       .filter(offer => offer.featured)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
   }
 
   async createOffer(insertOffer: InsertOffer): Promise<Offer> {
     const id = this.offerIdCounter++;
     const offer: Offer = {
-      ...insertOffer,
       id,
+      title: insertOffer.title,
+      description: insertOffer.description,
+      provider: insertOffer.provider,
+      type: insertOffer.type,
+      targetAges: insertOffer.targetAges ?? null,
+      location: insertOffer.location ?? null,
+      validFrom: insertOffer.validFrom ?? null,
+      validTo: insertOffer.validTo ?? null,
+      terms: insertOffer.terms ?? null,
+      link: insertOffer.link ?? null,
+      imageUrl: insertOffer.imageUrl ?? null,
+      featured: insertOffer.featured ?? null,
       createdAt: new Date()
     };
     this.offers.set(id, offer);
@@ -364,7 +414,7 @@ export class MemStorage implements IStorage {
         website: "https://example.com/littlepaws",
         description: "Indoor play area specially designed for babies and toddlers.",
         photos: [
-          "https://images.unsplash.com/photo-1574936611677-f231616a9089?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+          "https://images.unsplash.com/photo-1566454544259-f4b94c3d758c?w=500&q=80"
         ],
         hours: JSON.stringify({
           "monday-sunday": "10:00-18:00"
@@ -393,7 +443,7 @@ export class MemStorage implements IStorage {
         website: "https://example.com/greengarden",
         description: "Family restaurant with a garden area, perfect for families with babies.",
         photos: [
-          "https://images.unsplash.com/photo-1564758866811-4890819ed2d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+          "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80"
         ],
         hours: JSON.stringify({
           "monday-sunday": "11:00-22:00"
@@ -432,7 +482,7 @@ export class MemStorage implements IStorage {
         validTo: new Date("2023-09-30"),
         terms: "One free session per baby. New customers only.",
         link: "https://example.com/babysensory",
-        imageUrl: "https://images.unsplash.com/photo-1596464598937-1a481d21d61b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=300&q=80",
         featured: true
       },
       {
@@ -460,7 +510,7 @@ export class MemStorage implements IStorage {
         validTo: new Date("2023-12-31"),
         terms: "Valid weekdays 11am-5pm. One free kids meal per adult main course.",
         link: "https://example.com/familybistro",
-        imageUrl: "https://images.unsplash.com/photo-1558599249-46c436deb339?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&q=80",
         featured: false
       },
       {
@@ -474,7 +524,7 @@ export class MemStorage implements IStorage {
         validTo: new Date("2023-11-30"),
         terms: "One trial class per baby. Advance booking required.",
         link: "https://example.com/splashbabies",
-        imageUrl: "https://images.unsplash.com/photo-1566454419290-57a0589c9b17?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1560090995-01632a28895b?w=300&q=80",
         featured: false
       }
     ];
